@@ -1,0 +1,13 @@
+package: github.com/intelsdi-x/snap-plugin-collector-vsphere
+import:
+- package: github.com/intelsdi-x/snap-plugin-lib-go
+  subpackages:
+  - v1/plugin
+- package: github.com/vmware/govmomi
+  version: ~0.13.0
+  subpackages:
+  - find
+  - property
+  - vim25/methods
+  - vim25/mo
+  - vim25/types
