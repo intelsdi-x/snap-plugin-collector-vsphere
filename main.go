@@ -30,5 +30,5 @@ const (
 )
 
 func main() {
-	plugin.StartCollector(vsphere.New(false), pluginName, pluginVersion)
+	plugin.StartCollector(vsphere.New(false), pluginName, pluginVersion, plugin.ConcurrencyCount(1))
 }

@@ -7,8 +7,9 @@
   workflow:
     collect:
       metrics:
-        /intel/vmware/vsphere/host/*/memUsage: {}
-        /intel/vmware/vsphere/host/*/memFree: {}
+        /intel/vmware/vsphere/host/*/mem/*/free: {}
+        /intel/vmware/vsphere/host/*/cpu/*/idle: {}
+        /intel/vmware/vsphere/host/*/vm/*/virtualDisk/*/read_iops: {}
       config:
           "/intel/vmware/vsphere":
             "url": "localhost"
