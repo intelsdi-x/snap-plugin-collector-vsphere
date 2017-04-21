@@ -87,10 +87,23 @@ $ snaptel plugin load snap-plugin-publisher-file
 See available metrics for your system:
 ```
 $ snaptel metric list --verbose  
-NAMESPACE                                        VERSION         UNIT            DESCRIPTION
-/intel/vmware/vsphere/host/[host]/memAvailable    1               megabytes       Host memory available
-/intel/vmware/vsphere/host/[host]/memFree         1               megabytes       Host free memory
-/intel/vmware/vsphere/host/[host]/memUsage        1               megabytes       Host memory usage
+NAMESPACE                                                                                        VERSION        UNIT                     DESCRIPTION
+/intel/vmware/vsphere/host/[hostname]/cpu/[instance]/idle                                        1              percent                  Total & per-core time CPU spent in an idle as a percentage during the last 20s
+/intel/vmware/vsphere/host/[hostname]/cpu/[instance]/wait                                        1              percent                  Total time CPU spent in a wait state as a percentage during the last 20s
+/intel/vmware/vsphere/host/[hostname]/cpu/[instance]/load                                        1              percent                  CPU active average over last 5 minutes
+/intel/vmware/vsphere/host/[hostname]/mem/[instance]/available                                   1              megabyte                 Available memory in megabytes
+/intel/vmware/vsphere/host/[hostname]/mem/[instance]/free                                        1              megabyte                 Free memory in megabytes
+/intel/vmware/vsphere/host/[hostname]/mem/[instance]/usage                                       1              megabyte                 Memory usage in megabytes
+/intel/vmware/vsphere/host/[hostname]/net/[instance]/kbrate_rx                                   1              kiloBytesPerSecond       Average amount of data received per second during the last 20s
+/intel/vmware/vsphere/host/[hostname]/net/[instance]/kbrate_tx                                   1              kiloBytesPerSecond       Average amount of data transmitted per second during the last 20s
+/intel/vmware/vsphere/host/[hostname]/net/[instance]/packets_rx                                  1              number           Number of packets received during the last 20s
+/intel/vmware/vsphere/host/[hostname]/net/[instance]/packets_tx                                  1              number           Number of packets transmitted during the last 20s
+/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/read_iops               1              number           Read I/O operations per second
+/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/read_latency            1              millisecond              Read latency
+/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/read_throughput         1              kiloBytesPerSecond       Read throughput
+/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/write_iops              1              number           Write I/O operations per second
+/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/write_latency           1              millisecond              Write latency
+/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/write_throughput        1              kiloBytesPerSecond       Write throughput
 ```
 
 Add URL, username, password, and vSphere cluster name to task configuration, you can use an example:
@@ -134,61 +147,16 @@ State: Running
 See the file output (part of the output):
 ```
 $ tail -f /tmp/memory.log
-  {
-      "data": 48201,
-      "last_advertised_time": "2017-03-16T09:48:13.468157696+01:00",
-      "namespace": "/intel/vmware/vsphere/host/100.1.1.1/memUsage",
-      "tags": {
-          "plugin_running_on": "dev"
-      },
-      "timestamp": "2017-03-16T09:48:11.917464846+01:00",
-      "unit": "megabytes",
-      "version": 1
-  },
-  {
-      "data": 26809,
-      "last_advertised_time": "2017-03-16T09:48:13.468159549+01:00",
-      "namespace": "/intel/vmware/vsphere/host/100.1.1.2/memUsage",
-      "tags": {
-          "plugin_running_on": "dev"
-      },
-      "timestamp": "2017-03-16T09:48:12.169159107+01:00",
-      "unit": "megabytes",
-      "version": 1
-  },
-  {
-      "data": 213849,
-      "last_advertised_time": "2017-03-16T09:48:13.468161495+01:00",
-      "namespace": "/intel/vmware/vsphere/host/100.1.1.1/memFree",
-      "tags": {
-          "plugin_running_on": "dev"
-      },
-      "timestamp": "2017-03-16T09:48:12.96940815+01:00",
-      "unit": "megabytes",
-      "version": 1
-  },
-  {
-      "data": 235241,
-      "last_advertised_time": "2017-03-16T09:48:13.468163415+01:00",
-      "namespace": "/intel/vmware/vsphere/host/100.1.1.2/memFree",
-      "tags": {
-          "plugin_running_on": "dev"
-      },
-      "timestamp": "2017-03-16T09:48:13.218007203+01:00",
-      "unit": "megabytes",
-      "version": 1
-  }
-
 ```
-Plugin found 2 hosts in vSphere's cluster "**cluster**" (as given in task manifest)
+
+Or watch task values:
+```
+$ snaptel task watch 37cd9903-daf6-4e53-b15d-b9082666a830
+```
 
 ### Roadmap
 This plugin is still in active development and its metric catalog has to be extended. Items that must be covered as first are:
-- [ ] Add more host memory metrics (swap usage, buffer, caches)
-- [ ] Add CPU metrics (idle, iowait, load, steal, usertime, etc.) 
-- [ ] Add dynamic VM metrics - Get memory and CPU metrics for VMs
-- [ ] Extend plugin with IO metric (for vSphere datastore)
-- [ ] Refactor - Reduce **QueryPerf()** calls to make plugin more scalable 
+- [ ] Add SWAP metrics (figure out how to calculate full SWAP space) 
 
 If you have a feature request, please add it as an [issue](https://github.com/intelsdi-x/snap-plugin-collector-vsphere/issues) 
 and feel free to submit a [pull request](https://github.com/intelsdi-x/snap-plugin-collector-vsphere/pulls) that resolves it.
@@ -207,5 +175,5 @@ And **thank you!** Your contribution, through code and participation, is incredi
 
 ## Acknowledgements
 
-* Author: [@jjlakis](https://github.com/jjlakis/)
+* Authors: [@jjlakis](https://github.com/jjlakis/), [@mkleina](https://github.com/mkleina/)
 

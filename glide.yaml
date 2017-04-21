@@ -4,7 +4,7 @@ import:
   subpackages:
   - v1/plugin
 - package: github.com/vmware/govmomi
-  version: ~0.13.0
+  version: ~0.14.0
   subpackages:
   - find
   - property

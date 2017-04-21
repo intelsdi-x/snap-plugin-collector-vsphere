@@ -35,6 +35,8 @@ test-all:
 	$(MAKE) test-medium
 	$(MAKE) test-small
 	$(MAKE) test-large
+check:
+	$(MAKE) test
 clean:
 	rm -rf build
 
