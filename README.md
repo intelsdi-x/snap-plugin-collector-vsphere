@@ -118,11 +118,12 @@ $ cat examples/task/file.yaml
   workflow:
     collect:
       metrics:
-        /intel/vmware/vsphere/host/*/memUsage: {}
-        /intel/vmware/vsphere/host/*/memFree: {}
+        /intel/vmware/vsphere/host/*/mem/*/free: {}
+        /intel/vmware/vsphere/host/*/cpu/*/idle: {}
+        /intel/vmware/vsphere/host/*/vm/*/virtualDisk/*/read_iops: {}
       config:
           "/intel/vmware/vsphere":
-            "url": "localhost"
+            "url": "https://localhost/sdk"
             "username": "admin@domain"
             "password": "pass"
             "insecure": true
@@ -134,7 +135,7 @@ $ cat examples/task/file.yaml
 ```
 
 
-Create a task
+Provide correct credentials to vCenter endpoint and create a task
 ```
 $ snaptel task create -t examples/task/file.yaml
 Using task manifest to create task

@@ -12,7 +12,7 @@
         /intel/vmware/vsphere/host/*/vm/*/virtualDisk/*/read_iops: {}
       config:
           "/intel/vmware/vsphere":
-            "url": "localhost"
+            "url": "https://localhost/sdk"
             "username": "admin@domain"
             "password": "pass"
             "insecure": true
