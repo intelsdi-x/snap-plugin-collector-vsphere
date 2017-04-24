@@ -28,7 +28,7 @@ Namespace metric group prefix: `cpu`
 |-------------|-|--------------------|------|------------|-|
 | idle |%| `aggr`, per core| cpu.usage.average (100 - usage)  |`>5.0`| Total & per-core time CPU spent in an idle as a percentage during the last 20s || 
 | wait |%| `aggr` | cpu.latency.average  |`>5.0`| Total time CPU spent in a wait state as a percentage during the last 20s||
-| load |number| `aggr` | rescpu.actav5.latest | `>5.0` | CPU active average over last 5 minutes ||
+| load |number| `aggr` | rescpu.actav1.latest | `>5.0` | CPU load average over last 1 minute ||
 
 Namespace examples:
 * All per-instance and aggregated CPU metrics for all hosts:

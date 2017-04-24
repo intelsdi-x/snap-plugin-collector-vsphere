@@ -128,7 +128,7 @@ func initFixtures() {
 	testCountersInfo = []counterInfo{
 		counterInfo{key: 1, group: "cpu", name: "usage", rollup: "average"},
 		counterInfo{key: 2, group: "cpu", name: "latency", rollup: "average"},
-		counterInfo{key: 3, group: "rescpu", name: "actav5", rollup: "latest"},
+		counterInfo{key: 3, group: "rescpu", name: "actav1", rollup: "latest"},
 		counterInfo{key: 4, group: "mem", name: "consumed", rollup: "average"},
 		counterInfo{key: 5, group: "net", name: "bytesTx", rollup: "average"},
 		counterInfo{key: 6, group: "net", name: "bytesRx", rollup: "average"},

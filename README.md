@@ -90,7 +90,7 @@ $ snaptel metric list --verbose
 NAMESPACE                                                                                        VERSION        UNIT                     DESCRIPTION
 /intel/vmware/vsphere/host/[hostname]/cpu/[instance]/idle                                        1              percent                  Total & per-core time CPU spent in an idle as a percentage during the last 20s
 /intel/vmware/vsphere/host/[hostname]/cpu/[instance]/wait                                        1              percent                  Total time CPU spent in a wait state as a percentage during the last 20s
-/intel/vmware/vsphere/host/[hostname]/cpu/[instance]/load                                        1              percent                  CPU active average over last 5 minutes
+/intel/vmware/vsphere/host/[hostname]/cpu/[instance]/load                                        1              percent                  CPU load average over last 1 minute
 /intel/vmware/vsphere/host/[hostname]/mem/[instance]/available                                   1              megabyte                 Available memory in megabytes
 /intel/vmware/vsphere/host/[hostname]/mem/[instance]/free                                        1              megabyte                 Free memory in megabytes
 /intel/vmware/vsphere/host/[hostname]/mem/[instance]/usage                                       1              megabyte                 Memory usage in megabytes
