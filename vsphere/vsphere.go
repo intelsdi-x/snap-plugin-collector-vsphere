@@ -73,10 +73,7 @@ var metricDepMap = map[string]map[string][]string{
 	"cpu": map[string][]string{
 		"idle": []string{"cpu.usage.average"},
 		"wait": []string{"cpu.latency.average"},
-		"load": []string{"rescpu.actav5.latest"},
-	},
-	"rescpu": map[string][]string{
-		"load": []string{"rescpu.actav5.latest"},
+		"load": []string{"rescpu.actav1.latest"},
 	},
 	"mem": map[string][]string{
 		"usage": []string{"mem.consumed.average"},
@@ -489,7 +486,7 @@ func (c *Collector) GetMetricTypes(cfg plugin.Config) ([]plugin.Metric, error) {
 		Unit:        "percent"})
 	metrics = append(metrics, plugin.Metric{
 		Namespace:   c.createHostNs("cpu", "load"),
-		Description: "CPU Active (5 min. average)",
+		Description: "CPU load average over last 1 minute",
 		Unit:        "number"})
 
 	// HOST - NET
