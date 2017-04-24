@@ -23,6 +23,7 @@ package vsphere
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"strings"
@@ -361,6 +362,10 @@ func TestCollectMetrics(t *testing.T) {
 			Config:    testCfg,
 		},
 		plugin.Metric{
+			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "mem", "*", "available"),
+			Config:    testCfg,
+		},
+		plugin.Metric{
 			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "net", "*", "kbrate_tx"),
 			Config:    testCfg,
 		},
@@ -408,11 +413,12 @@ func TestCollectMetrics(t *testing.T) {
 		result, err := c.CollectMetrics(testMetrics)
 
 		So(err, ShouldBeNil)
-		So(len(result), ShouldEqual, 27)
+		So(len(result), ShouldEqual, 25)
 
 		// Checking CollectMetrics output based on data in mock fixtures
 		for _, r := range result {
 			ns := strings.Join(r.Namespace.Strings(), "/")
+			fmt.Println(ns, " => ", r.Data)
 			switch ns {
 			case "intel/vmware/vsphere/host/1.1.1.1/cpu/aggr/wait":
 				So(r.Data, ShouldEqual, 2)
@@ -430,6 +436,8 @@ func TestCollectMetrics(t *testing.T) {
 				So(r.Data, ShouldEqual, 1057)
 			case "intel/vmware/vsphere/host/2.2.2.2/mem/0/free":
 				So(r.Data, ShouldEqual, 4236)
+			case "intel/vmware/vsphere/host/1.1.1.1/mem/aggr/available":
+				So(r.Data, ShouldEqual, 1177)
 			case "intel/vmware/vsphere/host/1.1.1.1/net/eth0/kbrate_tx":
 				So(r.Data, ShouldEqual, 400)
 			case "intel/vmware/vsphere/host/1.1.1.1/net/eth0/kbrate_rx":

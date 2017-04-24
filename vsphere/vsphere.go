@@ -66,6 +66,9 @@ type parsedQueryResponse struct {
 	data            int64
 }
 
+// perfQuerySpecMap holds map of [entity name]types.PerfQuerySpec
+type perfQuerySpecMap map[string]types.PerfQuerySpec
+
 // Metric dependency map
 // Maps Snap metrics to vSphere perf counters needed to calculate desired metric
 // Each Snap metric can contain multiple dependencies
@@ -121,8 +124,8 @@ func (c *Collector) preparePerfMetricID(ctx context.Context, fullCounterName str
 	return metric, nil
 }
 
-// updateQuerySpecMap updates query spec map with counter ids
-func (c *Collector) updateQuerySpecMap(ctx context.Context, interval int32, querySpecs map[string]types.PerfQuerySpec, group string, metric string, entityName string, entityRef types.ManagedObjectReference) error {
+// updateQuerySpecMap updates query spec map with new PerfMetricIds (based on given metric name and entity reference)
+func (c *Collector) updateQuerySpecMap(ctx context.Context, querySpecs perfQuerySpecMap, interval int32, group string, metric string, entityName string, entityRef types.ManagedObjectReference) error {
 	// Initialize query spec map entry if needed
 	if _, ok := querySpecs[entityName]; !ok {
 		querySpecs[entityName] = types.PerfQuerySpec{
@@ -137,13 +140,24 @@ func (c *Collector) updateQuerySpecMap(ctx context.Context, interval int32, quer
 	counterFullNames := metricDepMap[group][metric]
 	if counterFullNames != nil {
 		for _, ctr := range counterFullNames {
+			// Prepare types.PerfMetricId object based on counter name
 			ctrMetricID, err := c.preparePerfMetricID(ctx, ctr)
 			if err != nil {
 				return err
 			}
+
+			// Add prepared metric to query spec map (for selected entity), avoid duplicates
 			entitySpec := querySpecs[entityName]
-			entitySpec.MetricId = append(entitySpec.MetricId, *ctrMetricID)
-			querySpecs[entityName] = entitySpec
+			duplicate := false
+			for _, mID := range entitySpec.MetricId {
+				if mID.CounterId == ctrMetricID.CounterId {
+					duplicate = true
+				}
+			}
+			if !duplicate {
+				entitySpec.MetricId = append(entitySpec.MetricId, *ctrMetricID)
+				querySpecs[entityName] = entitySpec
+			}
 		}
 	}
 
@@ -152,8 +166,8 @@ func (c *Collector) updateQuerySpecMap(ctx context.Context, interval int32, quer
 
 // buildQuerySpecsForMetrics builds slice of perf counter queries for all counters, hosts and virtual machines provided in metric namespaces
 func (c *Collector) buildQuerySpecsForMetrics(ctx context.Context, mts []plugin.Metric) ([]types.PerfQuerySpec, error) {
-	hostQuerySpecs := make(map[string]types.PerfQuerySpec)
-	vmQuerySpecs := make(map[string]types.PerfQuerySpec)
+	hostQuerySpecs := make(perfQuerySpecMap)
+	vmQuerySpecs := make(perfQuerySpecMap)
 	allQuerySpecs := []types.PerfQuerySpec{}
 
 	c.GovmomiResources.ClearCache()
@@ -169,7 +183,7 @@ func (c *Collector) buildQuerySpecsForMetrics(ctx context.Context, mts []plugin.
 			for _, host := range hosts {
 				isHost := m.Namespace[nsHostGroup].Value != "vm"
 				if isHost { // Retrieve vShpere HOST metrics
-					err := c.updateQuerySpecMap(ctx, defaultIntervalID, hostQuerySpecs, m.Namespace[nsHostGroup].Value, m.Namespace[nsHostMetric].Value, host.Name, host.Reference())
+					err := c.updateQuerySpecMap(ctx, hostQuerySpecs, defaultIntervalID, m.Namespace[nsHostGroup].Value, m.Namespace[nsHostMetric].Value, host.Name, host.Reference())
 					if err != nil {
 						return nil, err
 					}
@@ -180,7 +194,7 @@ func (c *Collector) buildQuerySpecsForMetrics(ctx context.Context, mts []plugin.
 						return nil, err
 					}
 					for _, vm := range vms {
-						err := c.updateQuerySpecMap(ctx, defaultIntervalID, vmQuerySpecs, m.Namespace[nsVMGroup].Value, m.Namespace[nsVMMetric].Value, vm.Name, vm.Reference())
+						err := c.updateQuerySpecMap(ctx, vmQuerySpecs, defaultIntervalID, m.Namespace[nsVMGroup].Value, m.Namespace[nsVMMetric].Value, vm.Name, vm.Reference())
 						if err != nil {
 							return nil, err
 						}
@@ -343,87 +357,74 @@ func (c *Collector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, error)
 	// Convert retrieved metrics to snap namespaces
 	for _, m := range mts {
 		if m.Namespace[nsSource].Value == "host" {
-			isHost := m.Namespace[nsHostGroup].Value != "vm"
-			if isHost {
-				hostName := m.Namespace[nsHost].Value
-				hostGroup := m.Namespace[nsHostGroup].Value
-				hostInstance := m.Namespace[nsHostInstance].Value
-				hostMetric := m.Namespace[nsHostMetric].Value
+			hostName := m.Namespace[nsHost].Value
+			hosts, err := c.GovmomiResources.FindHosts(ctx, hostName)
+			if err != nil {
+				return nil, err
+			}
+			for _, host := range hosts {
+				isHost := m.Namespace[nsHostGroup].Value != "vm"
+				if isHost {
+					hostGroup := m.Namespace[nsHostGroup].Value
+					hostInstance := m.Namespace[nsHostInstance].Value
+					hostMetric := m.Namespace[nsHostMetric].Value
 
-				// Filter all counter values for host and instance given in namespace (both can be *)
-				// Counter names for selected namespace are retrieved from metric dependency map
-				hostValues := c.filterQuery(results, hostName, "", metricDepMap[hostGroup][hostMetric], hostInstance)
+					// Filter all counter values for host and instance given in namespace (both can be *)
+					// Counter names for selected namespace are retrieved from metric dependency map
+					hostValues := c.filterQuery(results, host.Name, "", metricDepMap[hostGroup][hostMetric], hostInstance)
 
-				for _, v := range hostValues {
+					// Return host-level and multiple counter dependency metrics
 					metric := plugin.Metric{
-						Namespace: plugin.NewNamespace(vendor, class, name, "host", v.hostName, hostGroup, v.instance, hostMetric),
-						Data:      v.data,
+						Namespace: plugin.NewNamespace(vendor, class, name, "host", host.Name, hostGroup, aggregatedNs, hostMetric),
 					}
-					// Host derived metrics
 					switch hostGroup + "." + hostMetric {
-
-					// CPU idle
-					case "cpu.wait":
-						metric.Data = float64(v.data) / 100
-					case "cpu.idle":
-						metric.Data = 100 - float64(v.data)/100
-					case "cpu.load":
-						metric.Data = float64(v.data) / 100000
-
-					case "rescpu.load":
-						metric.Data = float64(v.data) / 1000
-
-					// Memory metrics
-					case "mem.usage":
-						metric.Data = v.data / unitKilobyte
-					case "mem.free":
-						hosts, err := c.GovmomiResources.FindHosts(ctx, v.hostName)
-						if err != nil {
-							return nil, err
-						}
-						if len(hosts) == 0 {
-							return nil, fmt.Errorf("no hosts found for name %s", v.hostName)
-						}
-						metric.Data = hosts[0].Hardware.MemorySize/unitMegabyte - v.data/unitKilobyte
+					case "mem.available":
+						metric.Data = host.Hardware.MemorySize / unitMegabyte
+						metrics = append(metrics, metric)
+						continue
 					}
-					metrics = append(metrics, metric)
-				}
 
-				// Host-level metrics
-				switch hostGroup + "." + hostMetric {
-				case "mem.available":
-					hosts, err := c.GovmomiResources.FindHosts(ctx, hostName)
-					if err != nil {
-						return nil, err
-					}
-					for _, host := range hosts {
+					// Return counter-level host metrics
+					for _, v := range hostValues {
 						metric := plugin.Metric{
-							Namespace: plugin.NewNamespace(vendor, class, name, "host", host.Name, hostGroup, aggregatedNs, hostMetric),
-							Data:      host.Hardware.MemorySize / unitMegabyte,
+							Namespace: plugin.NewNamespace(vendor, class, name, "host", v.hostName, hostGroup, v.instance, hostMetric),
+							Data:      v.data,
+						}
+						// Host derived metrics
+						switch hostGroup + "." + hostMetric {
+
+						// CPU idle
+						case "cpu.wait":
+							metric.Data = float64(v.data) / 100
+						case "cpu.idle":
+							metric.Data = 100 - float64(v.data)/100
+						case "cpu.load":
+							metric.Data = float64(v.data) / 100000
+
+						// Memory metrics
+						case "mem.usage":
+							metric.Data = v.data / unitKilobyte
+						case "mem.free":
+							metric.Data = host.Hardware.MemorySize/unitMegabyte - v.data/unitKilobyte
+						}
+
+						metrics = append(metrics, metric)
+					}
+				} else {
+					vmName := m.Namespace[nsVM].Value
+					vmGroup := m.Namespace[nsVMGroup].Value
+					vmInstance := m.Namespace[nsVMInstance].Value
+					vmMetric := m.Namespace[nsVMMetric].Value
+
+					vmValues := c.filterQuery(results, host.Name, vmName, metricDepMap[vmGroup][vmMetric], vmInstance)
+
+					for _, v := range vmValues {
+						metric := plugin.Metric{
+							Namespace: plugin.NewNamespace(vendor, class, name, "host", v.hostName, "vm", v.vmName, vmGroup, v.instance, vmMetric),
+							Data:      v.data,
 						}
 						metrics = append(metrics, metric)
 					}
-				}
-			} else {
-				vmHostName := m.Namespace[nsHost].Value
-				vmName := m.Namespace[nsVM].Value
-				vmGroup := m.Namespace[nsVMGroup].Value
-				vmInstance := m.Namespace[nsVMInstance].Value
-				vmMetric := m.Namespace[nsVMMetric].Value
-
-				vmValues := c.filterQuery(results, vmHostName, vmName, metricDepMap[vmGroup][vmMetric], vmInstance)
-
-				for _, v := range vmValues {
-					metric := plugin.Metric{
-						Namespace: plugin.NewNamespace(vendor, class, name, "host", v.hostName, "vm", v.vmName, vmGroup, v.instance, vmMetric),
-						Data:      v.data,
-					}
-					// VM derived metrics
-					switch vmGroup + "." + vmMetric {
-					case "virtualDisk.outstanding_io":
-
-					}
-					metrics = append(metrics, metric)
 				}
 			}
 		}
