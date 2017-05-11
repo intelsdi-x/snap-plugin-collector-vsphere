@@ -58,7 +58,7 @@ This builds the plugin in `/build/`.
 ## Documentation 
 
 ### Collected Metrics
-This plugin has the ability to gather memory metrics for each host that appearing in your vSphere infractructure
+This plugin has the ability to gather memory, CPU and network metrics for each host, and detailed IO metrics for each VM-mounted virtual disk from your vSphere infractructure.
 
 **vSphere Metric Catalog**
 
