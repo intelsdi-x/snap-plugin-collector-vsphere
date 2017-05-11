@@ -101,7 +101,6 @@ func initFixtures() {
 		counterData{key: 1, instance: "1", data: 110},
 		counterData{key: 1, instance: "2", data: 120},
 		counterData{key: 2, instance: "", data: 200},
-		counterData{key: 3, instance: "", data: 300},
 
 		// rescpu
 		counterData{key: 3, instance: "", data: 300},
