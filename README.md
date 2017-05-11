@@ -94,16 +94,16 @@ NAMESPACE                                                                       
 /intel/vmware/vsphere/host/[hostname]/mem/[instance]/available                                   1              megabyte                 Available memory in megabytes
 /intel/vmware/vsphere/host/[hostname]/mem/[instance]/free                                        1              megabyte                 Free memory in megabytes
 /intel/vmware/vsphere/host/[hostname]/mem/[instance]/usage                                       1              megabyte                 Memory usage in megabytes
-/intel/vmware/vsphere/host/[hostname]/net/[instance]/kbrate_rx                                   1              kiloBytesPerSecond       Average amount of data received per second during the last 20s
-/intel/vmware/vsphere/host/[hostname]/net/[instance]/kbrate_tx                                   1              kiloBytesPerSecond       Average amount of data transmitted per second during the last 20s
-/intel/vmware/vsphere/host/[hostname]/net/[instance]/packets_rx                                  1              number           Number of packets received during the last 20s
-/intel/vmware/vsphere/host/[hostname]/net/[instance]/packets_tx                                  1              number           Number of packets transmitted during the last 20s
-/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/read_iops               1              number           Read I/O operations per second
-/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/read_latency            1              millisecond              Read latency
-/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/read_throughput         1              kiloBytesPerSecond       Read throughput
-/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/write_iops              1              number           Write I/O operations per second
-/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/write_latency           1              millisecond              Write latency
-/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/write_throughput        1              kiloBytesPerSecond       Write throughput
+/intel/vmware/vsphere/host/[hostname]/net/[instance]/kbrateRx                                   1              kiloBytesPerSecond       Average amount of data received per second during the last 20s
+/intel/vmware/vsphere/host/[hostname]/net/[instance]/kbrateTx                                   1              kiloBytesPerSecond       Average amount of data transmitted per second during the last 20s
+/intel/vmware/vsphere/host/[hostname]/net/[instance]/packetsRx                                  1              number           Number of packets received during the last 20s
+/intel/vmware/vsphere/host/[hostname]/net/[instance]/packetsTx                                  1              number           Number of packets transmitted during the last 20s
+/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/readIops               1              number           Read I/O operations per second
+/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/readLatency            1              millisecond              Read latency
+/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/readThroughput         1              kiloBytesPerSecond       Read throughput
+/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/writeIops              1              number           Write I/O operations per second
+/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/writeLatency           1              millisecond              Write latency
+/intel/vmware/vsphere/host/[hostname]/vm/[vmname]/virtualDisk/[instance]/writeThroughput        1              kiloBytesPerSecond       Write throughput
 ```
 
 Add URL, username, password, and vSphere cluster name to task configuration, you can use an example:
@@ -120,7 +120,7 @@ $ cat examples/task/file.yaml
       metrics:
         /intel/vmware/vsphere/host/*/mem/*/free: {}
         /intel/vmware/vsphere/host/*/cpu/*/idle: {}
-        /intel/vmware/vsphere/host/*/vm/*/virtualDisk/*/read_iops: {}
+        /intel/vmware/vsphere/host/*/vm/*/virtualDisk/*/readIops: {}
       config:
           "/intel/vmware/vsphere":
             "url": "https://localhost/sdk"

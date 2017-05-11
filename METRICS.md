@@ -63,10 +63,10 @@ Namespace metric group prefix: `net`
 
 | Metric name |Unit| Instances          | perfCounter |API version| Description | 
 |-------------|-|--------------------|------|------------|-|
-| packets_tx |num| `aggr`, per VM NIC | net.packetsTx.summation  |`>5.0`| Number of packets transmitted during the last 20s ||
-| packets_rx |num| `aggr`, per VM NIC | net.packetsRx.summation |`>5.0`|Number of packets received during the last 20s || 
-| kbrate_tx |kBps| `aggr`, per VM NIC | net.bytesTx.summation    |`>5.0`| Average amount of data transmitted per second during the last 20s|| 
-| kbrate_rx |kBps| `aggr`, per VM NIC | net.bytesRx.summation  |`>5.0`| Average amount of data received per second during the last 20s
+| packetsTx |num| `aggr`, per VM NIC | net.packetsTx.summation  |`>5.0`| Number of packets transmitted during the last 20s ||
+| packetsRx |num| `aggr`, per VM NIC | net.packetsRx.summation |`>5.0`|Number of packets received during the last 20s || 
+| kbrateTx |kBps| `aggr`, per VM NIC | net.bytesTx.summation    |`>5.0`| Average amount of data transmitted per second during the last 20s|| 
+| kbrateRx |kBps| `aggr`, per VM NIC | net.bytesRx.summation  |`>5.0`| Average amount of data received per second during the last 20s
 
 
 Namespace examples:
@@ -74,9 +74,9 @@ Namespace examples:
 
   `/intel/vmware/vsphere/host/*/net/*`
 
-* packets_tx for `vmnic0` on host `1.1.1.1`
+* packetsTx for `vmnic0` on host `1.1.1.1`
 
-  `/intel/vmware/vsphere/host/1.1.1.1/net/vmnic0/packets_tx` 
+  `/intel/vmware/vsphere/host/1.1.1.1/net/vmnic0/packetsTx` 
 
 
 ## VMDK metrics
@@ -88,12 +88,12 @@ Namespace metric group prefix: `virtualDisk`
 
 | Metric name |Unit| Instances          | perfCounter |API version| Description | 
 |-------------|-|--------------------|------|------------|-|
-| read_throughput |kBps| `aggr`, per SCSI | virtualDisk.read.average  |`>5.0`| Rate of reading data from the virtual disk ||
-| write_throughput |kBps| `aggr`, per SCSI | virtualDisk.write.average |`>5.0`| Rate of reading data from the virtual disk || 
-| read_iops |num| per SCSI | virtualDisk.numberReadAveraged.average    |`>5.0`| Average number of read commands issued per second to the virtual disk during the last 20s|| 
-| write_iops |num| per SCSI | virtualDisk.numberWriteAveraged.average  |`>5.0`| Average number of write commands issued per second to the virtual disk during the last 20s
-| read_latency |ms| per SCSI | virtualDisk.totalReadLatency.average  |`>5.0`| Average latency for writing to virtual disk
-| write_latency |ms| per SCSI | virtualDisk.totalWriteLatency.average  |`>5.0`| Average latency for reading from virtual disk
+| readThroughput |kBps| `aggr`, per SCSI | virtualDisk.read.average  |`>5.0`| Rate of reading data from the virtual disk ||
+| writeThroughput |kBps| `aggr`, per SCSI | virtualDisk.write.average |`>5.0`| Rate of reading data from the virtual disk || 
+| readIops |num| per SCSI | virtualDisk.numberReadAveraged.average    |`>5.0`| Average number of read commands issued per second to the virtual disk during the last 20s|| 
+| writeIops |num| per SCSI | virtualDisk.numberWriteAveraged.average  |`>5.0`| Average number of write commands issued per second to the virtual disk during the last 20s
+| readLatency |ms| per SCSI | virtualDisk.totalReadLatency.average  |`>5.0`| Average latency for writing to virtual disk
+| writeLatency |ms| per SCSI | virtualDisk.totalWriteLatency.average  |`>5.0`| Average latency for reading from virtual disk
 
 Namespace examples:
 * All available VMDK metrics for all hosts:
@@ -102,4 +102,4 @@ Namespace examples:
 
 * Read throughput for VM `vm1` on host `1.1.1.1` for `scsi0:0` 
 
-  `/intel/vmware/vsphere/host/1.1.1.1/vm/vm1/virtualDisk/scsi0:0/read_throughput`
+  `/intel/vmware/vsphere/host/1.1.1.1/vm/vm1/virtualDisk/scsi0:0/readThroughput`
