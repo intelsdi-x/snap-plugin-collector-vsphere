@@ -366,43 +366,43 @@ func TestCollectMetrics(t *testing.T) {
 			Config:    testCfg,
 		},
 		plugin.Metric{
-			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "net", "*", "kbrate_tx"),
+			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "net", "*", "kbrateTx"),
 			Config:    testCfg,
 		},
 		plugin.Metric{
-			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "net", "*", "kbrate_rx"),
+			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "net", "*", "kbrateRx"),
 			Config:    testCfg,
 		},
 		plugin.Metric{
-			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "net", "*", "packets_tx"),
+			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "net", "*", "packetsTx"),
 			Config:    testCfg,
 		},
 		plugin.Metric{
-			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "net", "*", "packets_rx"),
+			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "net", "*", "packetsRx"),
 			Config:    testCfg,
 		},
 		plugin.Metric{
-			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "vm", "*", "virtualDisk", "*", "read_iops"),
+			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "vm", "*", "virtualDisk", "*", "readIops"),
 			Config:    testCfg,
 		},
 		plugin.Metric{
-			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "vm", "*", "virtualDisk", "*", "write_iops"),
+			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "vm", "*", "virtualDisk", "*", "writeIops"),
 			Config:    testCfg,
 		},
 		plugin.Metric{
-			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "vm", "*", "virtualDisk", "*", "read_throughput"),
+			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "vm", "*", "virtualDisk", "*", "readThroughput"),
 			Config:    testCfg,
 		},
 		plugin.Metric{
-			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "vm", "*", "virtualDisk", "*", "write_throughput"),
+			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "vm", "*", "virtualDisk", "*", "writeThroughput"),
 			Config:    testCfg,
 		},
 		plugin.Metric{
-			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "vm", "*", "virtualDisk", "*", "read_latency"),
+			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "vm", "*", "virtualDisk", "*", "readLatency"),
 			Config:    testCfg,
 		},
 		plugin.Metric{
-			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "vm", "*", "virtualDisk", "*", "write_latency"),
+			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "vm", "*", "virtualDisk", "*", "writeLatency"),
 			Config:    testCfg,
 		},
 	}
@@ -438,25 +438,25 @@ func TestCollectMetrics(t *testing.T) {
 				So(r.Data, ShouldEqual, 4236)
 			case "intel/vmware/vsphere/host/1.1.1.1/mem/aggr/available":
 				So(r.Data, ShouldEqual, 1177)
-			case "intel/vmware/vsphere/host/1.1.1.1/net/eth0/kbrate_tx":
+			case "intel/vmware/vsphere/host/1.1.1.1/net/eth0/kbrateTx":
 				So(r.Data, ShouldEqual, 400)
-			case "intel/vmware/vsphere/host/1.1.1.1/net/eth0/kbrate_rx":
+			case "intel/vmware/vsphere/host/1.1.1.1/net/eth0/kbrateRx":
 				So(r.Data, ShouldEqual, 500)
-			case "intel/vmware/vsphere/host/1.1.1.1/net/eth0/packets_tx":
+			case "intel/vmware/vsphere/host/1.1.1.1/net/eth0/packetsTx":
 				So(r.Data, ShouldEqual, 600)
-			case "intel/vmware/vsphere/host/1.1.1.1/net/eth0/packets_rx":
+			case "intel/vmware/vsphere/host/1.1.1.1/net/eth0/packetsRx":
 				So(r.Data, ShouldEqual, 700)
-			case "intel/vmware/vsphere/host/1.1.1.1/vm/VM1/virtualDisk/0/read_iops":
+			case "intel/vmware/vsphere/host/1.1.1.1/vm/VM1/virtualDisk/0/readIops":
 				So(r.Data, ShouldEqual, 800)
-			case "intel/vmware/vsphere/host/1.1.1.1/vm/VM1/virtualDisk/0/write_iops":
+			case "intel/vmware/vsphere/host/1.1.1.1/vm/VM1/virtualDisk/0/writeIops":
 				So(r.Data, ShouldEqual, 900)
-			case "intel/vmware/vsphere/host/1.1.1.1/vm/VM1/virtualDisk/0/read_throughput":
+			case "intel/vmware/vsphere/host/1.1.1.1/vm/VM1/virtualDisk/0/readThroughput":
 				So(r.Data, ShouldEqual, 1000)
-			case "intel/vmware/vsphere/host/1.1.1.1/vm/VM1/virtualDisk/0/write_throughput":
+			case "intel/vmware/vsphere/host/1.1.1.1/vm/VM1/virtualDisk/0/writeThroughput":
 				So(r.Data, ShouldEqual, 1100)
-			case "intel/vmware/vsphere/host/1.1.1.1/vm/VM1/virtualDisk/0/read_latency":
+			case "intel/vmware/vsphere/host/1.1.1.1/vm/VM1/virtualDisk/0/readLatency":
 				So(r.Data, ShouldEqual, 1200)
-			case "intel/vmware/vsphere/host/1.1.1.1/vm/VM1/virtualDisk/0/write_latency":
+			case "intel/vmware/vsphere/host/1.1.1.1/vm/VM1/virtualDisk/0/writeLatency":
 				So(r.Data, ShouldEqual, 1300)
 			}
 		}

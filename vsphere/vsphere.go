@@ -83,18 +83,18 @@ var metricDepMap = map[string]map[string][]string{
 		"free":  []string{"mem.consumed.average"},
 	},
 	"net": map[string][]string{
-		"kbrate_tx":  []string{"net.bytesTx.average"},
-		"kbrate_rx":  []string{"net.bytesRx.average"},
-		"packets_tx": []string{"net.packetsTx.summation"},
-		"packets_rx": []string{"net.packetsRx.summation"},
+		"kbrateTx":  []string{"net.bytesTx.average"},
+		"kbrateRx":  []string{"net.bytesRx.average"},
+		"packetsTx": []string{"net.packetsTx.summation"},
+		"packetsRx": []string{"net.packetsRx.summation"},
 	},
 	"virtualDisk": map[string][]string{
-		"read_iops":        []string{"virtualDisk.numberReadAveraged.average"},
-		"write_iops":       []string{"virtualDisk.numberWriteAveraged.average"},
-		"read_throughput":  []string{"virtualDisk.read.average"},
-		"write_throughput": []string{"virtualDisk.write.average"},
-		"read_latency":     []string{"virtualDisk.totalReadLatency.average"},
-		"write_latency":    []string{"virtualDisk.totalWriteLatency.average"},
+		"readIops":        []string{"virtualDisk.numberReadAveraged.average"},
+		"writeIops":       []string{"virtualDisk.numberWriteAveraged.average"},
+		"readThroughput":  []string{"virtualDisk.read.average"},
+		"writeThroughput": []string{"virtualDisk.write.average"},
+		"readLatency":     []string{"virtualDisk.totalReadLatency.average"},
+		"writeLatency":    []string{"virtualDisk.totalWriteLatency.average"},
 	},
 }
 
@@ -492,45 +492,45 @@ func (c *Collector) GetMetricTypes(cfg plugin.Config) ([]plugin.Metric, error) {
 
 	// HOST - NET
 	metrics = append(metrics, plugin.Metric{
-		Namespace:   c.createHostNs("net", "kbrate_tx"),
+		Namespace:   c.createHostNs("net", "kbrateTx"),
 		Description: "Average amount of data transmitted per second during the last 20s",
 		Unit:        "kiloBytesPerSecond"})
 	metrics = append(metrics, plugin.Metric{
-		Namespace:   c.createHostNs("net", "kbrate_rx"),
+		Namespace:   c.createHostNs("net", "kbrateRx"),
 		Description: "Average amount of data received per second during the last 20s",
 		Unit:        "kiloBytesPerSecond"})
 	metrics = append(metrics, plugin.Metric{
-		Namespace:   c.createHostNs("net", "packets_tx"),
+		Namespace:   c.createHostNs("net", "packetsTx"),
 		Description: "Number of packets transmitted during the last 20s",
 		Unit:        "number"})
 	metrics = append(metrics, plugin.Metric{
-		Namespace:   c.createHostNs("net", "packets_rx"),
+		Namespace:   c.createHostNs("net", "packetsRx"),
 		Description: "Number of packets received during the last 20s",
 		Unit:        "number"})
 
 	// VM - VIRTUALDISK
 	metrics = append(metrics, plugin.Metric{
-		Namespace:   c.createVMNs("virtualDisk", "read_iops"),
+		Namespace:   c.createVMNs("virtualDisk", "readIops"),
 		Description: "Read I/O operations per second",
 		Unit:        "number"})
 	metrics = append(metrics, plugin.Metric{
-		Namespace:   c.createVMNs("virtualDisk", "write_iops"),
+		Namespace:   c.createVMNs("virtualDisk", "writeIops"),
 		Description: "Write I/O operations per second",
 		Unit:        "number"})
 	metrics = append(metrics, plugin.Metric{
-		Namespace:   c.createVMNs("virtualDisk", "read_throughput"),
+		Namespace:   c.createVMNs("virtualDisk", "readThroughput"),
 		Description: "Read throughput",
 		Unit:        "kiloBytesPerSecond"})
 	metrics = append(metrics, plugin.Metric{
-		Namespace:   c.createVMNs("virtualDisk", "write_throughput"),
+		Namespace:   c.createVMNs("virtualDisk", "writeThroughput"),
 		Description: "Write throughput",
 		Unit:        "kiloBytesPerSecond"})
 	metrics = append(metrics, plugin.Metric{
-		Namespace:   c.createVMNs("virtualDisk", "read_latency"),
+		Namespace:   c.createVMNs("virtualDisk", "readLatency"),
 		Description: "Read latency",
 		Unit:        "millisecond"})
 	metrics = append(metrics, plugin.Metric{
-		Namespace:   c.createVMNs("virtualDisk", "write_latency"),
+		Namespace:   c.createVMNs("virtualDisk", "writeLatency"),
 		Description: "Write latency",
 		Unit:        "millisecond"})
 
