@@ -91,9 +91,9 @@ Namespace metric group prefix: `virtualDisk`
 | read_throughput |kBps| `aggr`, per SCSI | virtualDisk.read.average  |`>5.0`| Rate of reading data from the virtual disk ||
 | write_throughput |kBps| `aggr`, per SCSI | virtualDisk.write.average |`>5.0`| Rate of reading data from the virtual disk || 
 | read_iops |num| per SCSI | virtualDisk.numberReadAveraged.average    |`>5.0`| Average number of read commands issued per second to the virtual disk during the last 20s|| 
-| write_iops |num| per SCSI | virtualDisk.numberWriteAveraged.average  |`>5.0`| Average amount of data received per second during the last 20s
-| read_latency |ms| per SCSI | virtualDisk.totalReadLatency.average  |`>5.0`| Average amount of time for a read operation from the virtual disk
-| write_latency |ms| per SCSI | virtualDisk.totalWriteLatency.average  |`>5.0`| The average time a write to the virtual disk takes
+| write_iops |num| per SCSI | virtualDisk.numberWriteAveraged.average  |`>5.0`| Average number of write commands issued per second to the virtual disk during the last 20s
+| read_latency |ms| per SCSI | virtualDisk.totalReadLatency.average  |`>5.0`| Average latency for writing to virtual disk
+| write_latency |ms| per SCSI | virtualDisk.totalWriteLatency.average  |`>5.0`| Average latency for reading from virtual disk
 
 Namespace examples:
 * All available VMDK metrics for all hosts:
