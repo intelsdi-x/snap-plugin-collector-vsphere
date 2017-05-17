@@ -227,8 +227,9 @@ func (c *Collector) instanceToNs(instance string) string {
 	return instance
 }
 
-// buildParsedQueryResponses parses API counter data respose (all instances), retrieves host name, counter name etc for each counter instance and stores discovered info in slice
-func (c *Collector) buildParsedQueryResponses(ctx context.Context, entity types.BasePerfEntityMetricBase, datastoreName string, hostName string, vmName string) ([]parsedQueryResponse, error) {
+// buildParsedQueryResponses parses API respose entity data, retrieves host name, vm name,
+// counter name etc for each counter instance and stores discovered info in slice
+func (c *Collector) buildParsedQueryResponses(ctx context.Context, entity types.BasePerfEntityMetricBase) ([]parsedQueryResponse, error) {
 	result := []parsedQueryResponse{}
 
 	instances, err := c.GovmomiResources.GetInstances(entity)
@@ -238,7 +239,7 @@ func (c *Collector) buildParsedQueryResponses(ctx context.Context, entity types.
 
 	// Loop through all metric instances
 	for _, instance := range instances {
-		// Retrieve instance counter data and value
+		// Retrieve instance counter info and value
 		metric, err := c.GovmomiResources.GetInstanceSeries(instance)
 		if err != nil {
 			return nil, err
@@ -255,6 +256,31 @@ func (c *Collector) buildParsedQueryResponses(ctx context.Context, entity types.
 		}
 		metricData := metric.Value[0]
 
+		// Retrieve given entity info
+		entityType := entity.GetPerfEntityMetricBase().Entity.Type
+		entityRef := entity.GetPerfEntityMetricBase().Entity.Reference()
+		hostName := ""
+		vmName := ""
+		if entityType == "HostSystem" {
+			host, err := c.GovmomiResources.FindHostByRef(ctx, entityRef)
+			if err != nil {
+				return nil, err
+			}
+			hostName = host.Name
+		} else if entityType == "VirtualMachine" {
+			vm, err := c.GovmomiResources.FindVMByRef(ctx, entityRef)
+			if err != nil {
+				return nil, err
+			}
+			vmHost, err := c.GovmomiResources.FindHostByRef(ctx, vm.Summary.Runtime.Host.Reference())
+			if err != nil {
+				return nil, err
+			}
+			hostName = vmHost.Name
+			vmName = vm.Name
+		}
+
+		// Append parsed response
 		result = append(result, parsedQueryResponse{
 			hostName:        hostName,
 			vmName:          vmName,
@@ -271,34 +297,11 @@ func (c *Collector) parsePerfQueryResponse(ctx context.Context, response *types.
 	results := []parsedQueryResponse{}
 
 	for _, entity := range response.Returnval {
-		entityType := entity.GetPerfEntityMetricBase().Entity.Type
-		entityRef := entity.GetPerfEntityMetricBase().Entity.Reference()
-		if entityType == "HostSystem" {
-			host, err := c.GovmomiResources.FindHostByRef(ctx, entityRef)
-			if err != nil {
-				return nil, err
-			}
-			pqr, err := c.buildParsedQueryResponses(ctx, entity, "", host.Name, "")
-			if err != nil {
-				return nil, err
-			}
-			results = append(results, pqr...)
+		pqr, err := c.buildParsedQueryResponses(ctx, entity)
+		if err != nil {
+			return nil, err
 		}
-		if entityType == "VirtualMachine" {
-			vm, err := c.GovmomiResources.FindVMByRef(ctx, entityRef)
-			if err != nil {
-				return nil, err
-			}
-			vmHost, err := c.GovmomiResources.FindHostByRef(ctx, vm.Summary.Runtime.Host.Reference())
-			if err != nil {
-				return nil, err
-			}
-			pqr, err := c.buildParsedQueryResponses(ctx, entity, "", vmHost.Name, vm.Name)
-			if err != nil {
-				return nil, err
-			}
-			results = append(results, pqr...)
-		}
+		results = append(results, pqr...)
 	}
 
 	return results, nil
