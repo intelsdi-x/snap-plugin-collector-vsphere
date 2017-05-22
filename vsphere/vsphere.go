@@ -79,8 +79,9 @@ var metricDepMap = map[string]map[string][]string{
 		"load": []string{"rescpu.actav1.latest"},
 	},
 	"mem": map[string][]string{
-		"usage": []string{"mem.consumed.average"},
-		"free":  []string{"mem.consumed.average"},
+		"usage":     []string{"mem.consumed.average"},
+		"free":      []string{"mem.consumed.average"},
+		"swapUsage": []string{"mem.swapused.average"},
 	},
 	"net": map[string][]string{
 		"kbrateTx":  []string{"net.bytesTx.average"},
@@ -409,6 +410,8 @@ func (c *Collector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, error)
 							metric.Data = v.data / unitKilobyte
 						case "mem.free":
 							metric.Data = host.Hardware.MemorySize/unitMegabyte - v.data/unitKilobyte
+						case "mem.swapUsage":
+							metric.Data = v.data / unitKilobyte
 						}
 
 						metrics = append(metrics, metric)
@@ -477,6 +480,10 @@ func (c *Collector) GetMetricTypes(cfg plugin.Config) ([]plugin.Metric, error) {
 	metrics = append(metrics, plugin.Metric{
 		Namespace:   c.createHostNs("mem", "available"),
 		Description: "Available memory in megabytes",
+		Unit:        "megabyte"})
+	metrics = append(metrics, plugin.Metric{
+		Namespace:   c.createHostNs("mem", "swapUsage"),
+		Description: "Sum of memory swapped of all powered on VMs and vSphere services on the host.",
 		Unit:        "megabyte"})
 
 	// HOST - CPU

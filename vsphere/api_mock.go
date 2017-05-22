@@ -107,20 +107,21 @@ func initFixtures() {
 
 		// mem
 		counterData{key: 4, instance: "0", data: 123456},
+		counterData{key: 5, instance: "0", data: 5},
 
 		// net
-		counterData{key: 5, instance: "eth0", data: 400},
-		counterData{key: 6, instance: "eth0", data: 500},
-		counterData{key: 7, instance: "eth0", data: 600},
-		counterData{key: 8, instance: "eth0", data: 700},
+		counterData{key: 6, instance: "eth0", data: 400},
+		counterData{key: 7, instance: "eth0", data: 500},
+		counterData{key: 8, instance: "eth0", data: 600},
+		counterData{key: 9, instance: "eth0", data: 700},
 
 		// virtualDisk
-		counterData{key: 9, instance: "0", data: 800},
-		counterData{key: 10, instance: "0", data: 900},
-		counterData{key: 11, instance: "0", data: 1000},
-		counterData{key: 12, instance: "0", data: 1100},
-		counterData{key: 13, instance: "0", data: 1200},
-		counterData{key: 14, instance: "0", data: 1300},
+		counterData{key: 10, instance: "0", data: 800},
+		counterData{key: 11, instance: "0", data: 900},
+		counterData{key: 12, instance: "0", data: 1000},
+		counterData{key: 13, instance: "0", data: 1100},
+		counterData{key: 14, instance: "0", data: 1200},
+		counterData{key: 15, instance: "0", data: 1300},
 	}
 
 	// Fixtures with all available counters on server
@@ -129,16 +130,17 @@ func initFixtures() {
 		counterInfo{key: 2, group: "cpu", name: "latency", rollup: "average"},
 		counterInfo{key: 3, group: "rescpu", name: "actav1", rollup: "latest"},
 		counterInfo{key: 4, group: "mem", name: "consumed", rollup: "average"},
-		counterInfo{key: 5, group: "net", name: "bytesTx", rollup: "average"},
-		counterInfo{key: 6, group: "net", name: "bytesRx", rollup: "average"},
-		counterInfo{key: 7, group: "net", name: "packetsTx", rollup: "summation"},
-		counterInfo{key: 8, group: "net", name: "packetsRx", rollup: "summation"},
-		counterInfo{key: 9, group: "virtualDisk", name: "numberReadAveraged", rollup: "average"},
-		counterInfo{key: 10, group: "virtualDisk", name: "numberWriteAveraged", rollup: "average"},
-		counterInfo{key: 11, group: "virtualDisk", name: "read", rollup: "average"},
-		counterInfo{key: 12, group: "virtualDisk", name: "write", rollup: "average"},
-		counterInfo{key: 13, group: "virtualDisk", name: "totalReadLatency", rollup: "average"},
-		counterInfo{key: 14, group: "virtualDisk", name: "totalWriteLatency", rollup: "average"},
+		counterInfo{key: 5, group: "mem", name: "swapused", rollup: "average"},
+		counterInfo{key: 6, group: "net", name: "bytesTx", rollup: "average"},
+		counterInfo{key: 7, group: "net", name: "bytesRx", rollup: "average"},
+		counterInfo{key: 8, group: "net", name: "packetsTx", rollup: "summation"},
+		counterInfo{key: 9, group: "net", name: "packetsRx", rollup: "summation"},
+		counterInfo{key: 10, group: "virtualDisk", name: "numberReadAveraged", rollup: "average"},
+		counterInfo{key: 11, group: "virtualDisk", name: "numberWriteAveraged", rollup: "average"},
+		counterInfo{key: 12, group: "virtualDisk", name: "read", rollup: "average"},
+		counterInfo{key: 13, group: "virtualDisk", name: "write", rollup: "average"},
+		counterInfo{key: 14, group: "virtualDisk", name: "totalReadLatency", rollup: "average"},
+		counterInfo{key: 15, group: "virtualDisk", name: "totalWriteLatency", rollup: "average"},
 	}
 }
 
