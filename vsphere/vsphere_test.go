@@ -362,6 +362,10 @@ func TestCollectMetrics(t *testing.T) {
 			Config:    testCfg,
 		},
 		plugin.Metric{
+			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "mem", "*", "swapUsage"),
+			Config:    testCfg,
+		},
+		plugin.Metric{
 			Namespace: plugin.NewNamespace("intel", "vmware", "vsphere", "host", "1.1.1.1", "mem", "*", "available"),
 			Config:    testCfg,
 		},
@@ -413,7 +417,7 @@ func TestCollectMetrics(t *testing.T) {
 		result, err := c.CollectMetrics(testMetrics)
 
 		So(err, ShouldBeNil)
-		So(len(result), ShouldEqual, 25)
+		So(len(result), ShouldEqual, 26)
 
 		// Checking CollectMetrics output based on data in mock fixtures
 		for _, r := range result {
@@ -436,6 +440,8 @@ func TestCollectMetrics(t *testing.T) {
 				So(r.Data, ShouldEqual, 1057)
 			case "intel/vmware/vsphere/host/2.2.2.2/mem/0/free":
 				So(r.Data, ShouldEqual, 4236)
+			case "intel/vmware/vsphere/host/2.2.2.2/mem/0/swapUsage":
+				So(r.Data, ShouldEqual, 5)
 			case "intel/vmware/vsphere/host/1.1.1.1/mem/aggr/available":
 				So(r.Data, ShouldEqual, 1177)
 			case "intel/vmware/vsphere/host/1.1.1.1/net/eth0/kbrateTx":
