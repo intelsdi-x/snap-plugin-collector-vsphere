@@ -379,8 +379,11 @@ func (c *Collector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, error)
 
 					// Return host-level and multiple counter dependency metrics
 					metric := plugin.Metric{
-						Namespace: plugin.NewNamespace(vendor, class, name, "host", host.Name, hostGroup, aggregatedNs, hostMetric),
+						Namespace: plugin.CopyNamespace(m.Namespace),
 					}
+					metric.Namespace[nsHost].Value = host.Name
+					metric.Namespace[nsHostInstance].Value = aggregatedNs
+
 					switch hostGroup + "." + hostMetric {
 					case "mem.available":
 						metric.Data = host.Hardware.MemorySize / unitMegabyte
@@ -391,9 +394,12 @@ func (c *Collector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, error)
 					// Return counter-level host metrics
 					for _, v := range hostValues {
 						metric := plugin.Metric{
-							Namespace: plugin.NewNamespace(vendor, class, name, "host", v.hostName, hostGroup, v.instance, hostMetric),
+							Namespace: plugin.CopyNamespace(m.Namespace),
 							Data:      v.data,
 						}
+						metric.Namespace[nsHost].Value = v.hostName
+						metric.Namespace[nsHostInstance].Value = v.instance
+
 						// Host derived metrics
 						switch hostGroup + "." + hostMetric {
 
@@ -426,9 +432,13 @@ func (c *Collector) CollectMetrics(mts []plugin.Metric) ([]plugin.Metric, error)
 
 					for _, v := range vmValues {
 						metric := plugin.Metric{
-							Namespace: plugin.NewNamespace(vendor, class, name, "host", v.hostName, "vm", v.vmName, vmGroup, v.instance, vmMetric),
+							Namespace: plugin.CopyNamespace(m.Namespace),
 							Data:      v.data,
 						}
+						metric.Namespace[nsHost].Value = v.hostName
+						metric.Namespace[nsVM].Value = v.vmName
+						metric.Namespace[nsVMInstance].Value = v.instance
+
 						metrics = append(metrics, metric)
 					}
 				}
