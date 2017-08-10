@@ -48,7 +48,7 @@ type govmomiAPI struct {
 
 // Init initializes all necessary objects to send API calls to vSphere
 // TODO: Mock Init's inside functions instead of making 2 versions of Init()
-func (a *govmomiAPI) Init(ctx context.Context, url, username, password, clusterName string, insecure bool) error {
+func (a *govmomiAPI) Init(ctx context.Context, url, username, password, clusterName string, datacenterName string, insecure bool) error {
 	var err error
 	if a.client == nil {
 		a.client, err = initializeClient(ctx, url, username, password, insecure)
@@ -58,7 +58,7 @@ func (a *govmomiAPI) Init(ctx context.Context, url, username, password, clusterN
 	}
 
 	if a.finder == nil {
-		a.finder, err = initializeFinder(ctx, a.client)
+		a.finder, err = initializeFinder(ctx, a.client, datacenterName)
 		if err != nil {
 			return fmt.Errorf("unable to initialize vSphere finder: %v", err)
 		}
@@ -180,9 +180,9 @@ func initializeClient(ctx context.Context, hosturl, username, password string, i
 }
 
 // initializeFinder initializes and prepares vSphere API finder
-func initializeFinder(ctx context.Context, client *govmomi.Client) (*find.Finder, error) {
+func initializeFinder(ctx context.Context, client *govmomi.Client, datacenterName string) (*find.Finder, error) {
 	f := find.NewFinder(client.Client, true)
-	dc, err := f.DefaultDatacenter(ctx)
+	dc, err := f.DatacenterOrDefault(ctx, datacenterName)
 	if err != nil {
 		return nil, fmt.Errorf("unable to find default datacenter: %v", err)
 	}

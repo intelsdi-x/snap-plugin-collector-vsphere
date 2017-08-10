@@ -145,7 +145,7 @@ func initFixtures() {
 }
 
 // Init initializes all necessary objects to send API calls to vSphere
-func (a *mockAPI) Init(ctx context.Context, url, username, password, clusterName string, insecure bool) error {
+func (a *mockAPI) Init(ctx context.Context, url, username, password, clusterName string, datacenterName string, insecure bool) error {
 	if a.ClientFailure {
 		return fmt.Errorf("unable to initialize client")
 	}

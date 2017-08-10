@@ -41,7 +41,7 @@ const (
 // API - vSphere API interface for testing purposes
 type API interface {
 	// Initialize all necessary objects to send API calls to vSphere
-	Init(ctx context.Context, url, username, password, clusterName string, insecure bool) error
+	Init(ctx context.Context, url, username, password, clusterName string, datacenterName string, insecure bool) error
 
 	// RetrieveCounters retrieves vSphere cluster metric list that are available for user
 	RetrieveCounters(ctx context.Context) ([]types.PerfCounterInfo, error)
@@ -90,7 +90,12 @@ func (c *govmomiClient) Init(ctx context.Context, cfg plugin.Config) error {
 		return err
 	}
 
-	return c.api.Init(ctx, url, username, password, clusterName, insecure)
+	datacenterName, err := cfg.GetString("datacenterName")
+	if err != nil {
+		return err
+	}
+
+	return c.api.Init(ctx, url, username, password, clusterName, datacenterName, insecure)
 }
 
 func (c *govmomiClient) PerfQuery(ctx context.Context, querySpecs []types.PerfQuerySpec) (*types.QueryPerfResponse, error) {
