@@ -128,6 +128,7 @@ $ cat examples/task/file.yaml
             "password": "pass"
             "insecure": true
             "clusterName": "cluster"
+            "datacenterName": "DC"
       publish:
         - plugin_name: "file"
           config:

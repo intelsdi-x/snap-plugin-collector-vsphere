@@ -42,11 +42,12 @@ func Start() {
 // Test config
 func TestInit(t *testing.T) {
 	testCfg := plugin.Config{
-		"url":         "test",
-		"username":    "test",
-		"password":    "test",
-		"insecure":    true,
-		"clusterName": "test",
+		"url":            "test",
+		"username":       "test",
+		"password":       "test",
+		"insecure":       true,
+		"clusterName":    "test",
+		"datacenterName": "test",
 	}
 
 	Convey("test parameters", t, func() {
@@ -329,11 +330,12 @@ func TestPerfQuery(t *testing.T) {
 
 func TestCollectMetrics(t *testing.T) {
 	testCfg := plugin.Config{
-		"url":         "test",
-		"username":    "test",
-		"password":    "test",
-		"insecure":    true,
-		"clusterName": "test",
+		"url":            "test",
+		"username":       "test",
+		"password":       "test",
+		"insecure":       true,
+		"clusterName":    "test",
+		"datacenterName": "test",
 	}
 
 	testMetrics := []plugin.Metric{
@@ -501,11 +503,12 @@ func TestCollectMetrics(t *testing.T) {
 
 func TestGetMetricTypes(t *testing.T) {
 	testCfg := plugin.Config{
-		"url":         "test",
-		"username":    "test",
-		"password":    "test",
-		"insecure":    true,
-		"clusterName": "test",
+		"url":            "test",
+		"username":       "test",
+		"password":       "test",
+		"insecure":       true,
+		"clusterName":    "test",
+		"datacenterName": "test",
 	}
 
 	Convey("test TestGetMetricTypes output not empty", t, func() {
