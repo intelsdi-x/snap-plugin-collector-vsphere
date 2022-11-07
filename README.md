@@ -1,3 +1,12 @@
+DISCONTINUATION OF PROJECT. 
+
+This project will no longer be maintained by Intel.
+
+This project has been identified as having known security escapes.
+
+Intel has ceased development and contributions including, but not limited to, maintenance, bug fixes, new releases, or updates, to this project.  
+
+Intel no longer accepts patches to this project.
 # Snap collector plugin - VMWare vSphere
 
 This plugin collects performance counters data for VMWare vSphere cluster, using [govmomi](https://github.com/vmware/govmomi) - library communicating with  [vCenter server](http://www.vmware.com/products/vcenter-server.html). 
